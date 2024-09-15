@@ -26,8 +26,8 @@ enum class TextStyle {
 };
 
 
-void printStyledText(const std::string& text, TextColor color = TextColor::DEFAULT, TextStyle style = TextStyle::NORMAL) {
-    std::cout << "\033[" << static_cast<int>(style) << ';' << static_cast<int>(color) << 'm' << text << "\033[0m" << std::endl;
+void printStyledText(const std::string& text, TextColor color = TextColor::DEFAULT, TextStyle style = TextStyle::NORMAL, bool newLine = false) {
+    std::cout << "\033[" << static_cast<int>(style) << ';' << static_cast<int>(color) << 'm' << text << "\033[0m" << (newLine ? "\n" : "");
 }
 
 void deleteLastLine() {

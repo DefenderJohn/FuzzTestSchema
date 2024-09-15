@@ -25,7 +25,8 @@ public:
         this->TearDown();
         if (this->dataPtr != nullptr)
         {
-            printStyledText("TearDown函数未将dataPtr清理并置为nullPtr, 可能导致内存泄漏", TextColor::RED, TextStyle::BOLD);
+            printStyledText("!! TearDown函数未将dataPtr清理并置为nullPtr, 可能导致内存泄漏 !!", TextColor::RED, TextStyle::BOLD);
         }
     };
 };
+
