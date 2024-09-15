@@ -13,7 +13,7 @@ add_compile_options(-O3 -g3 -ggdb)
 
 # 添加 include 目录
 include_directories(${PROJECT_SOURCE_DIR}/src/include)
-# 索引host_code下的所有cpp
+# 索引src/csrc下的所有cpp
 file(GLOB_RECURSE SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/csrc/*.cpp)
 # 添加 src 目录下的源文件
 add_library(FuzzTestSchema ${SOURCE_FILES})
