@@ -33,3 +33,11 @@ void printStyledText(const std::string& text, TextColor color = TextColor::DEFAU
 void deleteLastLine() {
     std::cout << "\033[A" << "\033[2K";
 }
+
+std::string getStyledText(const std::string& text, TextColor color = TextColor::DEFAULT, TextStyle style = TextStyle::NORMAL) {
+    return "\033[" + std::to_string(static_cast<int>(style)) + ';' + std::to_string(static_cast<int>(color)) + 'm' + text + "\033[0m";
+}
+
+void appendStyledText(std::string& original, const std::string& text, TextColor color = TextColor::DEFAULT, TextStyle style = TextStyle::NORMAL) {
+    original += getStyledText(text, color, style);
+}

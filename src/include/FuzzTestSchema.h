@@ -1,14 +1,14 @@
 #include <StyledPrint.h>
-class TestResult {
-public:
-    bool success;
-    // TODO: 更多关于测试结果的成员和方法
-};
+#include <vector>
+#include <TestResult.h>
 
 class GenericTestClass {
 protected:
     void* dataPtr;
     TestResult testResult;
+    std::vector<TestDriverClass>    sublevelTestDrivers;
+    std::vector<TestContainerClass> sublevelTestContainers;
+    std::vector<TestExecutorClass>  sublevelTestExecutors;
 
 public:
     virtual ~GenericTestClass() {}
@@ -30,3 +30,12 @@ public:
     };
 };
 
+class TestContainerClass : public GenericTestClass {
+public:
+    virtual TestResult ProceedTest() override;
+};
+
+class TestExecutorClass : public GenericTestClass {
+public:
+    virtual TestResult ProceedTest() override;
+};
