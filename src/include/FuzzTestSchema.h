@@ -2,6 +2,11 @@
 #include <vector>
 #include <TestResult.h>
 
+class TestDriverClass;
+class TestContainerClass;
+class TestExecutorClass;
+
+
 class GenericTestClass {
 protected:
     void* dataPtr;

@@ -1,2 +1,7 @@
 # FuzzTestSchema
 适用于C++的多层级FuzzTest框架
+
+# 框架说明
+- TestDriverClass是负责加载和释放数据，以及调度下层测试类执行测试的对象。类比为一棵树的话，TestDriverClass便是根节点，但TestDriverClass不一定需要位于最顶端，在一些测试量大需要分步读取以免爆内存的情况下，TestDriverClass也可以位于根节点。TestDriverClass构造时需要传入负责加载数据的函数指针以及必要的参数列表。
+- TestContainerClass是负责承接TestDriverClass和TestExecutorClass的节点。类比为树的话，它是树的中间节点。TestContainerClass不执行具体的测试也不负责测试调度，只负责处理中间过程。它会包含数据指针，但既不负责数据初始化也不负责数据清理。
+- TestExecutorClass是具体执行测试的节点，或者类比为树的话是叶子节点。这类节点只负责执行**单个**测试，不应当预期使用它进一步调度其他测试。
