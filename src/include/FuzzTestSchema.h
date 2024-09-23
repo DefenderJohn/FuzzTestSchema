@@ -1,5 +1,3 @@
-#include <StyledPrint.h>
-#include <vector>
 #include <TestResult.h>
 
 class TestDriverClass;
@@ -11,6 +9,7 @@ class GenericTestClass {
 protected:
     void* dataPtr;
     TestResult testResult;
+    GenericTestClass();
     std::vector<TestDriverClass>    sublevelTestDrivers;
     std::vector<TestContainerClass> sublevelTestContainers;
     std::vector<TestExecutorClass>  sublevelTestExecutors;
@@ -23,6 +22,9 @@ public:
 
 class TestDriverClass : public GenericTestClass {
 public:
+    TestDriverClass(){
+        SetUp();
+    }
     virtual void SetUp();
     virtual void TearDown();
     virtual TestResult ProceedTest() override;
