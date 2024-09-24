@@ -1,7 +1,6 @@
 #ifndef FUZZ_TEST_SCHEMA_H
 #define FUZZ_TEST_SCHEMA_H
 #include <TestResult.h>
-#include <typeinfo>
 class TestDriverClass;
 class TestContainerClass;
 class TestExecutorClass;
@@ -17,9 +16,6 @@ public:
     GenericTestClass() {}
     virtual ~GenericTestClass() {}
     virtual TestResult ProceedTest() = 0;
-    void pushTest(GenericTestClass testClass){
-        this->sublevelTestClasses.push_back(testClass);
-    }
 };
 
 class TestDriverClass : public GenericTestClass {
@@ -34,13 +30,7 @@ public:
         TearDown();
         return this->testResult;
     }
-    ~TestDriverClass(){
-        this->TearDown();
-        if (this->dataPtr != nullptr)
-        {
-            printStyledText("!! TearDown函数未将dataPtr清理并置为nullPtr, 可能导致内存泄漏 !!", TextColor::RED, TextStyle::BOLD);
-        }
-    };
+    ~TestDriverClass() override {}
 };
 
 class TestContainerClass : public GenericTestClass {
@@ -50,7 +40,8 @@ public:
         this->isParentOfLeaf = isParentOfLeaf;
         this->dataPtr = dataPtr;
     }
-    virtual TestResult ProceedTest() override;
+    TestResult ProceedTest() override {};
+    ~TestContainerClass() override {}
 };
 
 class TestExecutorClass : public GenericTestClass {
@@ -58,7 +49,8 @@ public:
     TestExecutorClass(void* dataPtr){
         this->dataPtr = dataPtr;
     }
-    virtual TestResult ProceedTest() override;
+    TestResult ProceedTest() override {};
+    ~TestExecutorClass() override {}
 };
 
 #endif

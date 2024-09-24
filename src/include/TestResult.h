@@ -6,11 +6,11 @@
 #define FP_TOLERANCE 1e-6
 class TestResult {
 public:
-    bool success;
-    bool isLeaf;
-    bool isParentOfLeaf;
-    u_int32_t testIndex;
-    ssize_t subTestCount;
+    bool success = true;
+    bool isLeaf = false;
+    bool isParentOfLeaf = false;
+    u_int32_t testIndex = 0;
+    ssize_t subTestCount = 0;
     std::vector<TestResult> subTestResults;
     std::vector<std::string> testVerboseOutput;
 

@@ -1,8 +1,31 @@
 #include "FuzzTestSchema.h"
 
-class ExampleTestDriverClass;
-class ExampleTestContainerClass;
-class ExampleTestExecutorClass;
+class ExampleTestExecutorClass : public TestExecutorClass{
+public:
+    using TestExecutorClass::TestExecutorClass;
+    TestResult ProceedTest() override {
+        std::string* data = static_cast<std::string*>(this->dataPtr);
+        // 只是一个演示样例，检查str的长度是否为零
+        int length = data->length();
+        this->testResult.assertNE(length, 100);
+        return this->testResult;
+    }
+};
+
+class ExampleTestContainerClass : public TestContainerClass{
+public:
+    using TestContainerClass::TestContainerClass;
+    TestResult ProceedTest() override {
+        for (size_t i = 0; i < (static_cast<std::vector<std::string>*>(this->dataPtr))->size(); i++)
+        {
+            std::string subData = (static_cast<std::vector<std::string>*>(this->dataPtr))->at(i);
+            ExampleTestExecutorClass subClass(&subData);
+            TestResult result = subClass.ProceedTest();
+            this->testResult.appendSubTestResult(result);
+        }
+        return this->testResult;
+    }
+};
 
 class ExampleTestDriverClass : public TestDriverClass{
 protected:
@@ -31,6 +54,7 @@ protected:
             TestResult result = subClass.ProceedTest();
             this->testResult.appendSubTestResult(result);
         }
+        return this->testResult;
     }
 
     void TearDown() override {
@@ -38,33 +62,7 @@ protected:
     }
 };
 
-class ExampleTestContainerClass : public TestContainerClass{
-public:
-    using TestContainerClass::TestContainerClass;
-    TestResult ProceedTest() override {
-        for (size_t i = 0; i < (static_cast<std::vector<std::string>*>(this->dataPtr))->size(); i++)
-        {
-            std::string subData = (static_cast<std::vector<std::string>*>(this->dataPtr))->at(i);
-            ExampleTestExecutorClass subClass(&subData);
-            TestResult result = subClass.ProceedTest();
-            this->testResult.appendSubTestResult(result);
-            return this->testResult;
-        }
-        
-    }
-};
 
-class ExampleTestExecutorClass : public TestExecutorClass{
-public:
-    using TestExecutorClass::TestExecutorClass;
-    TestResult ProceedTest() override {
-        std::string* data = static_cast<std::string*>(this->dataPtr);
-        // 只是一个演示样例，检查str的长度是否为零
-        int length = data->length();
-        this->testResult.assertNE(length, 0);
-        return this->testResult;
-    }
-};
 
 int main(int argc, char **argv) {
     ExampleTestDriverClass rootClass;
