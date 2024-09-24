@@ -1,3 +1,5 @@
+#ifndef TEST_RES_H
+#define TEST_RES_H
 #include <StyledPrint.h>
 #include <vector>
 #include <string>
@@ -11,6 +13,8 @@ public:
     ssize_t subTestCount;
     std::vector<TestResult> subTestResults;
     std::vector<std::string> testVerboseOutput;
+
+    TestResult(){}
     
     TestResult(ssize_t subTestCount, bool isParentOfLeaf){
         this->isParentOfLeaf = isParentOfLeaf;
@@ -86,3 +90,5 @@ public:
         }  
     }
 };
+
+#endif

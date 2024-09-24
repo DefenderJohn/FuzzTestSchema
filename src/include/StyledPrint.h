@@ -1,3 +1,5 @@
+#ifndef STYLE_PRINT_H
+#define STYLE_PRINT_H
 #include <iostream>
 #include <string>
 
@@ -41,3 +43,4 @@ std::string getStyledText(const std::string& text, TextColor color = TextColor::
 void appendStyledText(std::string& original, const std::string& text, TextColor color = TextColor::DEFAULT, TextStyle style = TextStyle::NORMAL) {
     original += getStyledText(text, color, style);
 }
+#endif
