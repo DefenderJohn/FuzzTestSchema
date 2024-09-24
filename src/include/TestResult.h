@@ -38,6 +38,7 @@ public:
     }
 
     void refreshOutput(){
+        deleteLastLine();
         for (size_t i = 0; i < this->subTestResults.size(); i++)
         {
             if (subTestResults.at(i).success)
@@ -50,6 +51,11 @@ public:
             }
         }
         testVerboseOutput[this->subTestResults.size()] = getStyledText("[|]", TextColor::BLUE, TextStyle::BOLD);
+        for (size_t i = 0; i < this->testVerboseOutput.size(); i++)
+        {
+            std::cout << this->testVerboseOutput.at(i);
+        }
+        std::cout << std::endl;
     }
 
     template <typename T>

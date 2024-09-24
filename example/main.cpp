@@ -4,6 +4,7 @@ class ExampleTestExecutorClass : public TestExecutorClass{
 public:
     using TestExecutorClass::TestExecutorClass;
     TestResult ProceedTest() override {
+        this->testResult.isLeaf = true;
         std::string* data = static_cast<std::string*>(this->dataPtr);
         // 只是一个演示样例，检查str的长度是否为零
         int length = data->length();
@@ -16,6 +17,7 @@ class ExampleTestContainerClass : public TestContainerClass{
 public:
     using TestContainerClass::TestContainerClass;
     TestResult ProceedTest() override {
+        this->testResult.isParentOfLeaf = true;
         for (size_t i = 0; i < (static_cast<std::vector<std::string>*>(this->dataPtr))->size(); i++)
         {
             std::string subData = (static_cast<std::vector<std::string>*>(this->dataPtr))->at(i);
