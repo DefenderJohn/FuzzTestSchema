@@ -3,12 +3,12 @@
 class ExampleTestExecutorClass : public TestExecutorClass{
 public:
     using TestExecutorClass::TestExecutorClass;
-    TestResult ProceedTest() override {
+    TestResult ProceedTest(std::string testName) override {
         this->testResult.isLeaf = true;
-        std::string* data = static_cast<std::string*>(this->dataPtr);
+        std::string* data = DATA_PTR(std::string);
         // 只是一个演示样例，检查str的长度是否为零
         int length = data->length();
-        this->testResult.assertNE(length, 100);
+        this->testResult.assertNE(length, 8);
         return this->testResult;
     }
 };
@@ -16,14 +16,14 @@ public:
 class ExampleTestContainerClass : public TestContainerClass{
 public:
     using TestContainerClass::TestContainerClass;
-    TestResult ProceedTest() override {
-        TestResult result((static_cast<std::vector<std::string>*>(this->dataPtr))->size(), true);
+    TestResult ProceedTest(std::string testName) override {
+        TestResult result(DATA_PTR(std::vector<std::string>)->size(), true);
         this->testResult = result;
-        for (size_t i = 0; i < (static_cast<std::vector<std::string>*>(this->dataPtr))->size(); i++)
+        for (size_t i = 0; i < DATA_PTR(std::vector<std::string>)->size(); i++)
         {
-            std::string subData = (static_cast<std::vector<std::string>*>(this->dataPtr))->at(i);
+            std::string subData = DATA_PTR(std::vector<std::string>)->at(i);
             ExampleTestExecutorClass subClass(&subData);
-            TestResult result = subClass.ProceedTest();
+            TestResult result = subClass.ProceedTest(testName);
             this->testResult.appendSubTestResult(result);
         }
         return this->testResult;
@@ -33,7 +33,7 @@ public:
 class ExampleTestDriverClass : public TestDriverClass{
 protected:
     void fillData() {
-        auto matrix = static_cast<std::vector<std::vector<std::string>>*>(this->dataPtr);
+        auto matrix = DATA_PTR(std::vector<std::vector<std::string>>);
 
         for (int i = 0; i < 5; ++i) {
             std::vector<std::string> row;
@@ -49,12 +49,12 @@ protected:
         this->fillData();
     }
 
-    TestResult RunTest() override {
-        for (size_t i = 0; i < (static_cast<std::vector<std::vector<std::string>>*>(this->dataPtr))->size(); i++)
+    TestResult RunTest(std::string testName) override {
+        for (size_t i = 0; i < DATA_PTR(std::vector<std::vector<std::string>>)->size(); i++)
         {
-            std::vector<std::string> subData = (static_cast<std::vector<std::vector<std::string>>*>(this->dataPtr))->at(i);
+            std::vector<std::string> subData = DATA_PTR(std::vector<std::vector<std::string>>)->at(i);
             ExampleTestContainerClass subClass(true, &subData);
-            TestResult result = subClass.ProceedTest();
+            TestResult result = subClass.ProceedTest(testName);
             this->testResult.appendSubTestResult(result);
         }
         return this->testResult;
@@ -65,9 +65,7 @@ protected:
     }
 };
 
-
-
 int main(int argc, char **argv) {
     ExampleTestDriverClass rootClass;
-    rootClass.ProceedTest();
+    rootClass.ProceedTest("ExampleTest");
 }

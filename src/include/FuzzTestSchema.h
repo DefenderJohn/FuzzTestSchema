@@ -1,10 +1,7 @@
 #ifndef FUZZ_TEST_SCHEMA_H
 #define FUZZ_TEST_SCHEMA_H
 #include <TestResult.h>
-class TestDriverClass;
-class TestContainerClass;
-class TestExecutorClass;
-
+#include <Macros.h>
 
 class GenericTestClass {
 protected:
@@ -15,18 +12,18 @@ public:
     void* dataPtr;
     GenericTestClass() {}
     virtual ~GenericTestClass() {}
-    virtual TestResult ProceedTest() = 0;
+    virtual TestResult ProceedTest(std::string testName) = 0;
 };
 
 class TestDriverClass : public GenericTestClass {
 protected:
     virtual void SetUp() = 0;
     virtual void TearDown() = 0;
-    virtual TestResult RunTest() = 0;
+    virtual TestResult RunTest(std::string testName) = 0;
 public:
-    TestResult ProceedTest(){
+    TestResult ProceedTest(std::string testName){
         SetUp();
-        this->testResult.appendSubTestResult(RunTest());
+        this->testResult.appendSubTestResult(RunTest(testName));
         TearDown();
         return this->testResult;
     }
@@ -40,7 +37,7 @@ public:
         this->isParentOfLeaf = isParentOfLeaf;
         this->dataPtr = dataPtr;
     }
-    TestResult ProceedTest() override {};
+    TestResult ProceedTest(std::string testName) override {};
     ~TestContainerClass() override {}
 };
 
@@ -49,7 +46,7 @@ public:
     TestExecutorClass(void* dataPtr){
         this->dataPtr = dataPtr;
     }
-    TestResult ProceedTest() override {};
+    TestResult ProceedTest(std::string testName) override {};
     ~TestExecutorClass() override {}
 };
 

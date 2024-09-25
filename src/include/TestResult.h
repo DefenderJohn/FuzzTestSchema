@@ -3,7 +3,6 @@
 #include <StyledPrint.h>
 #include <vector>
 #include <string>
-#define FP_TOLERANCE 1e-6
 class TestResult {
 private:
     bool firstOutput = false;
@@ -53,7 +52,7 @@ public:
             }
             else
             {
-                testVerboseOutput[i] = getStyledText("[X]", TextColor::GREEN, TextStyle::BOLD);
+                testVerboseOutput[i] = getStyledText("[X]", TextColor::RED, TextStyle::BOLD);
             }
         }
         if (this->subTestResults.size() < this->testVerboseOutput.size())
