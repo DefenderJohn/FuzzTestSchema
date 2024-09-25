@@ -17,7 +17,8 @@ class ExampleTestContainerClass : public TestContainerClass{
 public:
     using TestContainerClass::TestContainerClass;
     TestResult ProceedTest() override {
-        this->testResult.isParentOfLeaf = true;
+        TestResult result((static_cast<std::vector<std::string>*>(this->dataPtr))->size(), true);
+        this->testResult = result;
         for (size_t i = 0; i < (static_cast<std::vector<std::string>*>(this->dataPtr))->size(); i++)
         {
             std::string subData = (static_cast<std::vector<std::string>*>(this->dataPtr))->at(i);

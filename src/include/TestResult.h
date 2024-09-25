@@ -5,6 +5,8 @@
 #include <string>
 #define FP_TOLERANCE 1e-6
 class TestResult {
+private:
+    bool firstOutput = false;
 public:
     bool success = true;
     bool isLeaf = false;
@@ -38,7 +40,11 @@ public:
     }
 
     void refreshOutput(){
-        deleteLastLine();
+        if(firstOutput)
+        {
+            deleteLastLine();
+        }
+        this->firstOutput = true;
         for (size_t i = 0; i < this->subTestResults.size(); i++)
         {
             if (subTestResults.at(i).success)
@@ -50,7 +56,10 @@ public:
                 testVerboseOutput[i] = getStyledText("[X]", TextColor::GREEN, TextStyle::BOLD);
             }
         }
-        testVerboseOutput[this->subTestResults.size()] = getStyledText("[|]", TextColor::BLUE, TextStyle::BOLD);
+        if (this->subTestResults.size() < this->testVerboseOutput.size())
+        {
+            testVerboseOutput[this->subTestResults.size()] = getStyledText("[|]", TextColor::BLUE, TextStyle::BOLD);
+        }
         for (size_t i = 0; i < this->testVerboseOutput.size(); i++)
         {
             std::cout << this->testVerboseOutput.at(i);
