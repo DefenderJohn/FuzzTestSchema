@@ -214,7 +214,7 @@ public:
     */
     template <typename T>
     void assertFEQ(std::string variableName, T lhs, T rhs, T tolerance = FP_TOLERANCE){
-        this->success = success ? lhs - rhs <= tolerance : success;
+        this->success = success ? ABS(lhs, rhs) <= tolerance : success;
         this->failedCount = !success ? failedCount + 1 : failedCount;
         if (lhs != rhs)
         {
@@ -265,7 +265,7 @@ public:
     */
     template <typename T>
     void assertFNE(std::string variableName, T lhs, T rhs, T tolerance = FP_TOLERANCE){
-        this->success = success ? lhs - rhs <= tolerance : success;
+        this->success = success ? ABS(lhs, rhs) <= tolerance : success;
         this->failedCount = !success ? failedCount + 1 : failedCount;
         if (lhs != rhs)
         {

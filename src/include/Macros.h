@@ -50,4 +50,5 @@ using NameType = std::string;
     this->testResult.appendSubTestResult(result);                           \
 }
 
+#define ABS(lhs, rhs) lhs > rhs ? lhs - rhs : rhs - lhs
 #endif
