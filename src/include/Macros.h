@@ -51,4 +51,31 @@ using NameType = std::string;
 }
 
 #define ABS(lhs, rhs) lhs > rhs ? lhs - rhs : rhs - lhs
+
+#define START_TIMER auto start = std::chrono::high_resolution_clock::now();
+
+#define FINISH_TIMER std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count()
+
+// 定义转换阈值
+#define MIN_THRESHOLD 300000000  // 5 minutes in microseconds
+#define SEC_THRESHOLD 5000000    // 5 seconds in microseconds
+#define MS_THRESHOLD 5000        // 5 milliseconds in microseconds
+
+// 定义转换公式
+#define CONVERT_MIN(time) ((float)time / 1000000.0f / 60.0f)  // Convert μs to minutes
+#define CONVERT_SEC(time) ((float)time / 1000000.0f)          // Convert μs to seconds
+#define CONVERT_MS(time) ((float)time / 1000.0f)              // Convert μs to milliseconds
+
+
+std::string formatTime(uint64_t microseconds) {
+    if (microseconds >= MIN_THRESHOLD) {
+        return std::to_string(CONVERT_MIN(microseconds)) + " min";
+    } else if (microseconds >= SEC_THRESHOLD) {
+        return std::to_string(CONVERT_SEC(microseconds)) + " s";
+    } else if (microseconds >= MS_THRESHOLD) {
+        return std::to_string(CONVERT_MS(microseconds)) + " ms";
+    } else {
+        return std::to_string(microseconds) + " μs";
+    }
+}
 #endif

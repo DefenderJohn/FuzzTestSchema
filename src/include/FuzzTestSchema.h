@@ -103,7 +103,21 @@ public:
     /// @param testName 测试的名称。
     /// @return 返回测试结果。
     /// @details 此函数需要在派生类中实现，以执行具体的测试逻辑。
-    TestResult ProceedTest(NameType testName) override {};
+    TestResult ProceedTest(NameType testName) override {
+        if (isParentOfLeaf)
+        {
+            START_TIMER;
+            auto result = RunTest(testName);
+            auto time = FINISH_TIMER;
+            result.runTime = time;
+            this->testResult.finishSubtestBatch();
+            return result;
+        }
+        this->testResult.finishSubtestBatch();
+        return RunTest(testName);
+    };
+
+    virtual TestResult RunTest(NameType testName) = 0;
 
     /// @brief 析构函数。
     ~TestContainerClass() override {}

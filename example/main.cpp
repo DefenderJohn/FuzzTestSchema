@@ -98,7 +98,7 @@ public:
      * @param testName 测试的名称。
      * @return 返回测试结果。
      */
-    TestResult ProceedTest(NameType testName) override
+    TestResult RunTest(NameType testName) override
     {
         // 获取当前容器的名称
         NameType subTestName = DATA_PTR(ContainerType)->second;
@@ -124,9 +124,6 @@ public:
             // 将子测试的结果附加到当前测试结果中
             this->testResult.appendSubTestResult(subTestResult);
         }
-
-        // 结束当前测试批次，并输出最终结果
-        this->testResult.finishSubtestBatch();
 
         // 返回当前测试的结果
         return this->testResult;

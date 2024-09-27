@@ -3,6 +3,8 @@
 #include <StyledPrint.h>
 #include <vector>
 #include <string>
+#include <chrono>
+#include <limits>
 #include <Macros.h>
 
 /**
@@ -58,6 +60,8 @@ public:
     /// @details 收集测试过程中遇到的所有错误信息。
     std::vector<std::string> errorInfo;
 
+    uint64_t runTime;
+
     /**
      * 喂给自动构造器的空构造函数
      * 除非明确在调用后手动初始化变量，否则不应当手动调用这个方法
@@ -111,7 +115,23 @@ public:
         
         if (this->success)
         {
-            printStyledText("Test: " + testName + "  SUCCEED(" + std::to_string(subTestCount) + " passed)", TextColor::GREEN, TextStyle::NORMAL, true);
+            uint64_t longestRunTime = 0;
+            uint64_t shortestRunTime = std::numeric_limits<uint64_t>::max();
+            uint64_t averageRunTime = 0;
+            for (size_t i = 0; i < this->subTestResults.size(); i++)
+            {
+                auto subtestTime = this->subTestResults.at(i).runTime;
+                longestRunTime = subtestTime > longestRunTime ? subtestTime : longestRunTime;
+                shortestRunTime = subtestTime < shortestRunTime ? subtestTime : shortestRunTime;
+                averageRunTime = i == 0 ? subtestTime : averageRunTime + (subtestTime - averageRunTime) / (i + 1);
+            }
+
+            std::string longestRunTimeStr = formatTime(longestRunTime);
+            std::string shortestRunTimeStr = formatTime(shortestRunTime);
+            std::string averageRunTimeStr = formatTime(averageRunTime);
+            
+            printStyledText("Test: " + testName + "  SUCCEED(" + std::to_string(subTestCount) + " passed)", TextColor::GREEN, TextStyle::NORMAL, false);
+            printStyledText(" : Average running time: " + averageRunTimeStr + ", Longest running time: " + longestRunTimeStr + ", Shortest running time: " + shortestRunTimeStr + ".", TextColor::WHITE, TextStyle::NORMAL, true);
         }else{
             printStyledText("Test: " + testName + "  FAILED(" + std::to_string(subTestCount) + " passed, " + std::to_string(failedCount) + " failed)", TextColor::RED, TextStyle::BOLD, true);
             for (auto error : errorInfo)
