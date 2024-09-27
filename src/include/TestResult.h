@@ -4,6 +4,13 @@
 #include <vector>
 #include <string>
 #include <Macros.h>
+
+/**
+ * @brief 测试结果类。
+ *
+ * TestResult 类用于封装单个测试的结果信息。它可以用来跟踪测试的状态，
+ * 包括测试是否成功、测试名称、子测试结果等。此外，它还提供了输出测试结果的功能。
+ */
 class TestResult {
 private:
     /// @brief 标记是否首次输出测试信息。
