@@ -1,71 +1,98 @@
 #include "FuzzTestSchema.h"
+#include <unistd.h>
 
-class ExampleTestExecutorClass : public TestExecutorClass{
+using BaseType = std::string;
+using ContainerDatatype = std::vector<BaseType>;
+using ContainerType = std::pair<ContainerDatatype, NameType>;
+using DriverDatatype = std::vector<ContainerType>;
+using DriverType = std::pair<DriverDatatype, NameType>;
+
+class ExampleTestExecutorClass : public TestExecutorClass
+{
 public:
     using TestExecutorClass::TestExecutorClass;
-    TestResult ProceedTest(std::string testName) override {
+    TestResult ProceedTest(NameType testName) override
+    {
         this->testResult.isLeaf = true;
-        std::string* data = DATA_PTR(std::string);
+        this->testResult.testIndex = this->testIndex;
+        std::string *data = DATA_PTR(std::string);
         // 只是一个演示样例，检查str的长度是否为零
         int length = data->length();
-        this->testResult.assertNE(length, 8);
+        this->testResult.assertNE("string length",length, 8);
+        usleep(75000); // 假设有一个比较复杂的计算被执行
         return this->testResult;
     }
 };
 
-class ExampleTestContainerClass : public TestContainerClass{
+class ExampleTestContainerClass : public TestContainerClass
+{
 public:
     using TestContainerClass::TestContainerClass;
-    TestResult ProceedTest(std::string testName) override {
-        TestResult result(DATA_PTR(std::vector<std::string>)->size(), true);
+    TestResult ProceedTest(NameType testName) override
+    {
+        NameType subTestName = DATA_PTR(ContainerType)->second;
+        TestResult result(DATA_PTR(ContainerType)->first.size(), true, testName + "." + subTestName);
         this->testResult = result;
-        for (size_t i = 0; i < DATA_PTR(std::vector<std::string>)->size(); i++)
+        for (size_t i = 0; i < DATA_PTR(ContainerType)->first.size(); i++)
         {
-            std::string subData = DATA_PTR(std::vector<std::string>)->at(i);
-            ExampleTestExecutorClass subClass(&subData);
-            TestResult result = subClass.ProceedTest(testName);
-            this->testResult.appendSubTestResult(result);
+            BaseType subData = DATA_PTR(ContainerType)->first.at(i);
+            ExampleTestExecutorClass subClass(&subData, i);                            
+            TestResult result = subClass.ProceedTest(testName + "." + subTestName); 
+            this->testResult.appendSubTestResult(result);  
         }
+        this->testResult.finishSubtestBatch();
         return this->testResult;
     }
 };
 
-class ExampleTestDriverClass : public TestDriverClass{
+class ExampleTestDriverClass : public TestDriverClass
+{
 protected:
-    void fillData() {
-        auto matrix = DATA_PTR(std::vector<std::vector<std::string>>);
+    void fillData()
+    {
+        auto matrix = DATA_PTR(DriverType);
+        DriverDatatype data;
 
-        for (int i = 0; i < 5; ++i) {
-            std::vector<std::string> row;
-            for (int j = 0; j < 3; ++j) {
+        for (int i = 0; i < 20; ++i)
+        {
+            ContainerDatatype row;
+            for (int j = 0; j < 50; ++j)
+            {
                 row.push_back("String " + std::to_string(i * 3 + j));
             }
-            matrix->push_back(row);
+            data.push_back(ContainerType(row, "test-" + std::to_string(i)));
         }
+        matrix->first = data;
+        matrix->second = "ExampleTest";
     }
 
-    void SetUp() override {
-        this->dataPtr = new std::vector<std::vector<std::string>>();
+    void SetUp() override
+    {
+        this->dataPtr = new DriverType();
         this->fillData();
     }
 
-    TestResult RunTest(std::string testName) override {
-        for (size_t i = 0; i < DATA_PTR(std::vector<std::vector<std::string>>)->size(); i++)
+    TestResult RunTest(NameType testName) override
+    {
+        for (size_t i = 0; i < DATA_PTR(DriverType)->first.size(); i++)
         {
-            std::vector<std::string> subData = DATA_PTR(std::vector<std::vector<std::string>>)->at(i);
-            ExampleTestContainerClass subClass(true, &subData);
-            TestResult result = subClass.ProceedTest(testName);
-            this->testResult.appendSubTestResult(result);
+            ContainerType subData = DATA_PTR(DriverType)->first.at(i);
+            NameType subTestName = DATA_PTR(DriverType)->second;
+            ExampleTestContainerClass subClass(true, &subData);                            
+            TestResult result = subClass.ProceedTest(testName + "." + subTestName); 
+            this->testResult.appendSubTestResult(result);   
         }
         return this->testResult;
     }
 
-    void TearDown() override {
-        delete static_cast<std::vector<std::vector<std::string>>*>(this->dataPtr);
+    void TearDown() override
+    {
+        delete DATA_PTR(DriverType);
     }
 };
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     ExampleTestDriverClass rootClass;
-    rootClass.ProceedTest("ExampleTest");
+    rootClass.ProceedTest("ShowCase");
 }
