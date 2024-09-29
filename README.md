@@ -36,7 +36,7 @@
 
 ### TestContainerClass
 
-`TestContainerClass` 负责承接 `TestDriverClass` 和 `TestExecutorClass` 的节点。类比为树的话，它是树的中间节点。`TestContainerClass` 不执行具体的测试也不负责测试调度，只负责处理中间过程。它会包含数据指针，但既不负责数据初始化也不负责数据清理。
+`TestContainerClass` 负责承接 `TestDriverClass` 和 `TestExecutorClass` 的节点。类比为树的话，它是树的中间节点。`TestContainerClass` 不执行具体的测试，只负责处理中间过程和调度。它会包含数据指针，但既不负责数据初始化也不负责数据清理。
 
 #### 主要职责
 - **管理子测试类**：通过 `sublevelTestClasses` 管理多个子测试类。
@@ -76,6 +76,6 @@
 
 ## 注意事项
 
-- 用户不应直接继承 `GenericTestClass` 类，而应继承其具体的子类，如 `TestExecutorClass` 或 `TestContainerClass`。
+- 用户不应直接继承 `GenericTestClass` 类，而应继承其具体的子类，如 `TestExecutorClass` ， `TestContainerClass`和`TestDriverClass`。
 - 在编写测试逻辑时，请确保正确处理测试结果，并适当地更新 `TestResult` 对象。
 - 在使用格式化输出函数时，请注意终端是否支持 ANSI 转义码。
