@@ -110,7 +110,7 @@ public:
             auto result = RunTest(testName);
             auto time = FINISH_TIMER;
             result.runTime = time;
-            this->testResult.finishSubtestBatch();
+            this->testResult.finishSubtestBatch(true);
             return result;
         }
         auto result = RunTest(testName);
