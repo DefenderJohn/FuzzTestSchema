@@ -104,17 +104,19 @@ public:
     /// @return 返回测试结果。
     /// @details 此函数需要在派生类中实现，以执行具体的测试逻辑。
     TestResult ProceedTest(NameType testName) override {
+        START_TIMER;
         if (isParentOfLeaf)
         {
-            START_TIMER;
             auto result = RunTest(testName);
             auto time = FINISH_TIMER;
             result.runTime = time;
             this->testResult.finishSubtestBatch();
             return result;
         }
-        this->testResult.finishSubtestBatch();
-        return RunTest(testName);
+        auto result = RunTest(testName);
+        auto time = FINISH_TIMER;
+        result.runTime = time;
+        return result;
     };
 
     virtual TestResult RunTest(NameType testName) = 0;

@@ -100,9 +100,13 @@ public:
      *
      * 注意：这是内部使用的方法，不建议外部调用。
      */
-    void finishSubtestBatch(){
-        deleteLastLine();
-        deleteLastLine();
+    void finishSubtestBatch(bool isParentOfLeaf){
+        if (isParentOfLeaf)
+        {
+            deleteLastLine();
+            deleteLastLine();
+        }
+        
         for (auto subtestRes : this->subTestResults)
         {
             this->success = this->success ? subtestRes.success : this->success;

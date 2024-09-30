@@ -135,7 +135,7 @@ class ExampleTestDriverClass : public TestDriverClass
 protected:
     void fillData()
     {
-        auto matrix = DATA_PTR(DriverType);
+        DriverType* matrix = DATA_PTR(DriverType);
         DriverDatatype data;
 
         for (int i = 0; i < 20; ++i)
