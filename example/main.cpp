@@ -47,7 +47,7 @@ public:
      * @param testName 测试的名称。
      * @return 返回测试结果。
      */
-    TestResult ProceedTest(NameType testName) override
+    TestResult RunTest(NameType testName) override
     {
         // 标记当前测试为叶子节点
         this->testResult.isLeaf = true;
@@ -62,7 +62,7 @@ public:
         int length = data->length();
 
         // 断言字符串的长度不等于8
-        this->testResult.assertNE("string length", length, 8);
+        this->testResult.assertNE("string length", length, 0);
 
         // 模拟一个耗时较长的操作以便观察测试是否正常执行（在实际使用时不应这么操作）
         usleep(75000); 

@@ -123,7 +123,7 @@ public:
                 auto subtestTime = this->subTestResults.at(i).runTime;
                 longestRunTime = subtestTime > longestRunTime ? subtestTime : longestRunTime;
                 shortestRunTime = subtestTime < shortestRunTime ? subtestTime : shortestRunTime;
-                averageRunTime = i == 0 ? subtestTime : averageRunTime + (subtestTime - averageRunTime) / (i + 1);
+                averageRunTime = i == 0 ? subtestTime : (int64_t)averageRunTime + ((int64_t)subtestTime - (int64_t)averageRunTime) / (int64_t)(i + 1);
             }
 
             std::string longestRunTimeStr = formatTime(longestRunTime);
@@ -131,7 +131,7 @@ public:
             std::string averageRunTimeStr = formatTime(averageRunTime);
             
             printStyledText("Test: " + testName + "  SUCCEED(" + std::to_string(subTestCount) + " passed)", TextColor::GREEN, TextStyle::NORMAL, false);
-            printStyledText(" : Average running time: " + averageRunTimeStr + ", Longest running time: " + longestRunTimeStr + ", Shortest running time: " + shortestRunTimeStr + ".", TextColor::WHITE, TextStyle::NORMAL, true);
+            printStyledText(" : Average running time: " + averageRunTimeStr + ", Longest running time: " + longestRunTimeStr + ", Shortest running time: " + shortestRunTimeStr + ".", TextColor::CYAN, TextStyle::NORMAL, true);
         }else{
             printStyledText("Test: " + testName + "  FAILED(" + std::to_string(subTestCount) + " passed, " + std::to_string(failedCount) + " failed)", TextColor::RED, TextStyle::BOLD, true);
             for (auto error : errorInfo)
